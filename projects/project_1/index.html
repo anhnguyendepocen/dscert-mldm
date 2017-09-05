@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+  
+  
+  
+  
+   <html class="no-js"> 
+
+  <head lang="en-us">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+    <title>Project 1: Finding origin of DNA replication in a bacterial genome - CMSC643: Machine Learning and Data Mining</title>
+    <meta name="generator" content="Hugo 0.24" />
+
+    
+    <meta name="description" content="Machine Learning and Data Mining course. Part of the Department of Computer Science of the University of Maryland&#39;s Graduate Certificate in Data Science">
+    
+    <link rel="canonical" href="http://www.hcbravo.org/dscert-mldm/projects/project_1/">
+    
+    <meta name="author" content="Héctor Corrada Bravo">
+    
+
+    <meta property="og:url" content="http://www.hcbravo.org/dscert-mldm/projects/project_1/">
+    <meta property="og:title" content="CMSC643: Machine Learning and Data Mining">
+    <meta property="og:image" content="http://www.hcbravo.org/dscert-mldm/images/logo.png">
+    <meta name="apple-mobile-web-app-title" content="CMSC643: Machine Learning and Data Mining">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="shortcut icon" type="image/x-icon" href="http://www.hcbravo.org/dscert-mldm/images/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="http://www.hcbravo.org/dscert-mldm/images/favicon.ico">
+
+    <style>
+      @font-face {
+        font-family: 'Icon';
+        src: url('http://www.hcbravo.org/dscert-mldm/fonts/icon.eot');
+        src: url('http://www.hcbravo.org/dscert-mldm/fonts/icon.eot')
+               format('embedded-opentype'),
+             url('http://www.hcbravo.org/dscert-mldm/fonts/icon.woff')
+               format('woff'),
+             url('http://www.hcbravo.org/dscert-mldm/fonts/icon.ttf')
+               format('truetype'),
+             url('http://www.hcbravo.org/dscert-mldm/fonts/icon.svg')
+               format('svg');
+        font-weight: normal;
+        font-style: normal;
+      }
+    </style>
+
+    <link rel="stylesheet" href="http://www.hcbravo.org/dscert-mldm/stylesheets/application.css">
+    <link rel="stylesheet" href="http://www.hcbravo.org/dscert-mldm/stylesheets/temporary.css">
+    <link rel="stylesheet" href="http://www.hcbravo.org/dscert-mldm/stylesheets/palettes.css">
+    <link rel="stylesheet" href="http://www.hcbravo.org/dscert-mldm/stylesheets/highlight/highlight.css">
+
+    
+    
+    
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,700|Roboto&#43;Mono">
+    <style>
+      body, input {
+        font-family: 'Roboto', Helvetica, Arial, sans-serif;
+      }
+      pre, code {
+        font-family: 'Roboto Mono', 'Courier New', 'Courier', monospace;
+      }
+    </style>
+
+    
+    <script src="http://www.hcbravo.org/dscert-mldm/javascripts/modernizr.js"></script>
+
+    
+
+  </head>
+  <body class="palette-primary-red palette-accent-blue">
+
+
+
+	
+	
+
+
+<div class="backdrop">
+	<div class="backdrop-paper"></div>
+</div>
+
+<input class="toggle" type="checkbox" id="toggle-drawer">
+<input class="toggle" type="checkbox" id="toggle-search">
+<label class="toggle-button overlay" for="toggle-drawer"></label>
+
+<header class="header">
+	<nav aria-label="Header">
+  <div class="bar default">
+    <div class="button button-menu" role="button" aria-label="Menu">
+      <label class="toggle-button icon icon-menu" for="toggle-drawer">
+        <span></span>
+      </label>
+    </div>
+    <div class="stretch">
+      <div class="title">
+        Project 1: Finding origin of DNA replication in a bacterial genome
+      </div>
+    </div>
+
+    
+    <div class="button button-twitter" role="button" aria-label="Twitter">
+       <a href="https://twitter.com/hcorrada" title="@hcorrada on Twitter" target="_blank" class="toggle-button icon icon-twitter"></a>
+    </div>
+    
+
+    
+    <div class="button button-github" role="button" aria-label="GitHub">
+      <a href="https://github.com/hcorrada" title="@hcorrada on GitHub" target="_blank" class="toggle-button icon icon-github"></a>
+    </div>
+    
+    
+        
+  </div>
+  <div class="bar search">
+    <div class="button button-close" role="button" aria-label="Close">
+      <label class="toggle-button icon icon-back" for="toggle-search"></label>
+    </div>
+    <div class="stretch">
+      <div class="field">
+        <input class="query" type="text" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck>
+      </div>
+    </div>
+    <div class="button button-reset" role="button" aria-label="Search">
+      <button class="toggle-button icon icon-close" id="reset-search"></button>
+    </div>
+  </div>
+</nav>
+
+</header>
+
+<main class="main">
+	<div class="drawer">
+		<nav aria-label="Navigation">
+  <a href="http://www.hcbravo.org/dscert-mldm" class="project">
+    <div class="banner">
+      
+        <div class="logo">
+          <img src="http://www.hcbravo.org/dscert-mldmimages/logo.png">
+        </div>
+      
+      <div class="name">
+        <strong>CMSC643: Machine Learning and Data Mining </strong>
+        
+          <br>
+          hcorrada/dscert-mldm.git
+        
+      </div>
+    </div>
+  </a>
+
+  <div class="scrollable">
+    <div class="wrapper">
+      
+        <hr>
+      
+
+      <div class="toc">
+        
+        <ul>
+          
+
+
+
+
+<li>
+  
+    
+
+
+
+<a  title="Calendar" href="http://www.hcbravo.org/dscert-mldm/calendar/">
+	
+	Calendar
+</a>
+
+
+
+  
+</li>
+
+
+
+<li>
+  
+    
+
+
+
+<a  title="Logistics" href="http://www.hcbravo.org/dscert-mldm/logistics/">
+	
+	Logistics
+</a>
+
+
+
+  
+</li>
+
+
+
+<li>
+  
+    
+
+
+
+<a  title="Resources" href="http://www.hcbravo.org/dscert-mldm/resources/">
+	
+	Resources
+</a>
+
+
+
+  
+</li>
+
+
+
+<li>
+  
+    
+
+
+
+<a  title="Projects" href="http://www.hcbravo.org/dscert-mldm/projects/">
+	
+	Projects
+</a>
+
+
+
+  
+</li>
+
+
+        </ul>
+        
+
+        
+        <hr>
+        <span class="section">The author</span>
+        
+        <ul>
+          
+          <li>
+            <a href="https://twitter.com/hcorrada" target="_blank" title="@hcorrada on Twitter">
+              @hcorrada on Twitter
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://github.com/hcorrada" target="_blank" title="@hcorrada on GitHub">
+              @hcorrada on GitHub
+            </a>
+          </li>
+          
+        </ul>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+	</div>
+
+	<article class="article">
+		<div class="wrapper">
+			<h1>Project 1: Finding origin of DNA replication in a bacterial genome </h1>
+
+			
+
+<p><strong>Due: Monday Feb. 20, 2017</strong><br />
+<strong>Posted: Feb 9, 2017</strong><br />
+<strong>Last Update: Feb 9, 2017</strong></p>
+
+<h1 id="part-1-programming-exercises">Part 1: Programming Exercises</h1>
+
+<p>Submit your answers to Problems 1-3 in the
+<a href="http://rosalind.info/classes/401/">Rosalind final submission page</a>.</p>
+
+<p><strong>NOTE: THESE PROGRAMS NEED TO BE SUBMITTED TO ROSALIND BY Monday 02/20 at 11:59PM</strong></p>
+
+<p><strong>Question 1. (10pts)</strong> For each of the 3 solutions submitted provide a
+runtime analysis of your solution.
+For full credit, include a short description of your algorithm and
+show how you derive your answer.</p>
+
+<p><strong>Code Grading (45 pts)</strong></p>
+
+<p>Each of the 3 Rosalind exercises will be evaluated based on correctness, efficiency and style.</p>
+
+<ol>
+<li><p>Correctness: if you pass the Rosalind correctness check, you get full credit. Otherwise, your grade is determined by</p>
+
+<ul>
+<li>Program running without error when called as <code>python &lt;script.py&gt; &lt;input_file&gt;</code> where <code>&lt;input_file&gt;</code> is in the format used for that problem in Rosalind.</li>
+<li>Program reading input in the required format.<br /></li>
+<li>Program printing output in correct format as described in Rosalind.<br /></li>
+<li>Program implementing an algorithm that addresses the problem (i.e., you get more points if the algorithm is correct but you have a bug, e.g., with indexing)<br /></li>
+</ul></li>
+
+<li><p>Efficiency: points are awarded for providing efficient solutions. For example, a linear algorithm will score better than a quadratic algorithm. For full credit, implement the efficient algorithms described in textbook and discussed in class.</p></li>
+
+<li><p>Is the code in your submission clean and easy to read, with non-obvious statements
+properly commented? Are functions used appropriately for clarity and organization?</p></li>
+</ol>
+
+<h1 id="part-2-skew-diagrams">Part 2: Skew Diagrams</h1>
+
+<p><em>Campylobacter jejuni</em> is a well-known bacterial pathogen, recently
+ found
+ <a href="http://genomebiology.com/2014/15/6/R76">to be associated with childhood dysentery</a>
+ in developing countries. Here, you will apply your new skills in a
+ preliminary analysis of the genome of this pathogen.</p>
+
+<p><strong>Step 1. (5 pts)</strong> Use the <code>BioPython</code> library to download the <em>Campylobacter
+  jejuni</em> genome from NCBI:</p>
+
+<pre><code>from Bio import Entrez, SeqIO
+Entrez.email = &quot;me@example.com&quot;
+campy_id = &quot;AL111168.1&quot;
+
+# open an url handle for query
+handle = Entrez.efetch(db=&quot;nucleotide&quot;, id=campy_id, rettype=&quot;gb&quot;, retmode=&quot;text&quot;)
+
+# read query result records
+record = SeqIO.read(handle, &quot;genbank&quot;)
+handle.close()
+
+# write sequence to fasta file (so you don't have to request again)
+SeqIO.write(record, &quot;campy.fa&quot;, &quot;fasta&quot;)
+</code></pre>
+
+<p>Variable <code>record</code> is a <code>SeqIO</code> object containing the <em>Campylobacter
+jejuni</em> genome. Check
+<a href="http://biopython.org/DIST/docs/tutorial/Tutorial.html">Chapter 2 of the Biopython tutorial</a>
+again to see how these objects work.
+Also see Chapter 9 of the tutorial for more info on how to obtain DNA
+sequences from NCBI.</p>
+
+<p><strong>Step 2. (15 pts)</strong> Write a script to plot the skew diagram for
+  <em>Campylobacter jejuni</em>. One easy way of plotting is using pylab and IPython. If you start IPython as follows:</p>
+
+<pre><code>ipython
+</code></pre>
+
+<p>and <code>skew</code> is the skew vector you computed for <em>Campylobacter jejuni</em>
+you can plot with</p>
+
+<pre><code>%pylab
+plot(skew)
+</code></pre>
+
+<p><strong>Question 2 (10 pts)</strong> Does this skew diagram look like the ones you&rsquo;ve seen
+so far in book and discussion? What do you think may account for any
+differences? Where do you think replication origin for
+  <em>Campylobacter jejuni</em> is located?</p>
+
+<p>Save your skew diagram <code>pdf</code> or other image file and include in your submission (see below).</p>
+
+<h1 id="part-3-dnaa-boxes">Part 3: DnaA boxes</h1>
+
+<p>Use your code to find most frequent words with mismatches (at most d=2 mismatches) and reverse complements to find candidate DnaA binding sequences in the oriC candidate region you found above (250bp on each side of position minimizing skew).</p>
+
+<p><strong>Question 3 (10 pts)</strong> Construct a table that shows for each k=3,4,5,6,7,8,9:<br />
+(a) the number of distinct frequent words, and<br />
+(b) the number of times each frequent word occurs in the genomic region.</p>
+
+<p><strong>Question 4 (5 pts)</strong> Based on your result, did you find a reasonable candidate DnaA sequence you would provide to a biologist to test. If so, write down the candidate sequence and explain why you chose this particular candidate sequence. If not, explain why not.</p>
+
+<h1 id="how-to-submit">How to submit</h1>
+
+<p>Prepare a writeup answering the four questions above and save as <code>pdf</code>. Submit any additional code (besides your solutions to the Rosalind exercises) used for this part of the homework. I highly recommend working with a <code>Jupyter</code> notebook, exporting the notebook as <code>pdf</code> and submitting that.</p>
+
+<p>Submit to ELMS by Monday 02/20 11:59pm here: <a href="https://myelms.umd.edu/courses/1218381/assignments/4362579">https://myelms.umd.edu/courses/1218381/assignments/4362579</a></p>
+
+
+			<aside class="copyright" role="note">
+				
+				&copy; 2017 Released under the MIT license &ndash;
+				
+				Documentation built with
+				<a href="https://www.gohugo.io" target="_blank">Hugo</a>
+				using the
+				<a href="http://github.com/digitalcraftsman/hugo-material-docs" target="_blank">Material</a> theme.
+			</aside>
+
+			<footer class="footer">
+				
+
+<nav class="pagination" aria-label="Footer">
+  <div class="previous">
+  
+      <a href="http://www.hcbravo.org/dscert-mldm/projects/project_2/" title="Project 2: Gibbs Sampling, EM and evolution">
+        <span class="direction">
+          Previous
+        </span>
+        <div class="page">
+          <div class="button button-previous" role="button" aria-label="Previous">
+            <i class="icon icon-back"></i>
+          </div>
+          <div class="stretch">
+            <div class="title">
+              Project 2: Gibbs Sampling, EM and evolution
+            </div>
+          </div>
+        </div>
+      </a>
+  
+  </div>
+
+  <div class="next">
+  
+      <a href="http://www.hcbravo.org/dscert-mldm/projects/project_3/" title="Project 3: Genome Assembly and String Alignment">
+        <span class="direction">
+          Next
+        </span>
+        <div class="page">
+          <div class="stretch">
+            <div class="title">
+              Project 3: Genome Assembly and String Alignment
+            </div>
+          </div>
+          <div class="button button-next" role="button" aria-label="Next">
+            <i class="icon icon-forward"></i>
+          </div>
+        </div>
+      </a>
+  
+  </div>
+</nav>
+
+
+
+
+
+			</footer>
+		</div>
+	</article>
+
+	<div class="results" role="status" aria-live="polite">
+		<div class="scrollable">
+			<div class="wrapper">
+				<div class="meta"></div>
+				<div class="list"></div>
+			</div>
+		</div>
+	</div>
+</main>
+
+    <script>
+    
+      var base_url = 'http:\/\/www.hcbravo.org\/dscert-mldm';
+      var repo_id  = 'hcorrada\/dscert-mldm.git';
+    
+    </script>
+
+    <script src="http://www.hcbravo.org/dscert-mldm/javascripts/application.js"></script>
+    
+
+    <script>
+      /* Add headers to scrollspy */
+      var headers   = document.getElementsByTagName("h2");
+      var scrollspy = document.getElementById('scrollspy');
+
+      if(scrollspy) {
+        if(headers.length > 0) {
+          for(var i = 0; i < headers.length; i++) {
+            var li = document.createElement("li");
+            li.setAttribute("class", "anchor");
+
+            var a  = document.createElement("a");
+            a.setAttribute("href", "#" + headers[i].id);
+            a.setAttribute("title", headers[i].innerHTML);
+            a.innerHTML = headers[i].innerHTML;
+
+            li.appendChild(a)
+            scrollspy.appendChild(li);
+          }
+        } else {
+          scrollspy.parentElement.removeChild(scrollspy)
+        }
+
+
+        /* Add permanent link next to the headers */
+        var headers = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
+
+        for(var i = 0; i < headers.length; i++) {
+            var a = document.createElement("a");
+            a.setAttribute("class", "headerlink");
+            a.setAttribute("href", "#" + headers[i].id);
+            a.setAttribute("title", "Permanent link")
+            a.innerHTML = "#";
+            headers[i].appendChild(a);
+        }
+      }
+    </script>
+
+    
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  </body>
+</html>
+

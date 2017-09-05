@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+  
+  
+  
+  
+   <html class="no-js"> 
+
+  <head lang="en-us">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+    <title>Project 3: Genome Assembly and String Alignment - CMSC643: Machine Learning and Data Mining</title>
+    <meta name="generator" content="Hugo 0.24" />
+
+    
+    <meta name="description" content="Machine Learning and Data Mining course. Part of the Department of Computer Science of the University of Maryland&#39;s Graduate Certificate in Data Science">
+    
+    <link rel="canonical" href="http://www.hcbravo.org/dscert-mldm/projects/project_3/">
+    
+    <meta name="author" content="Héctor Corrada Bravo">
+    
+
+    <meta property="og:url" content="http://www.hcbravo.org/dscert-mldm/projects/project_3/">
+    <meta property="og:title" content="CMSC643: Machine Learning and Data Mining">
+    <meta property="og:image" content="http://www.hcbravo.org/dscert-mldm/images/logo.png">
+    <meta name="apple-mobile-web-app-title" content="CMSC643: Machine Learning and Data Mining">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="shortcut icon" type="image/x-icon" href="http://www.hcbravo.org/dscert-mldm/images/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="http://www.hcbravo.org/dscert-mldm/images/favicon.ico">
+
+    <style>
+      @font-face {
+        font-family: 'Icon';
+        src: url('http://www.hcbravo.org/dscert-mldm/fonts/icon.eot');
+        src: url('http://www.hcbravo.org/dscert-mldm/fonts/icon.eot')
+               format('embedded-opentype'),
+             url('http://www.hcbravo.org/dscert-mldm/fonts/icon.woff')
+               format('woff'),
+             url('http://www.hcbravo.org/dscert-mldm/fonts/icon.ttf')
+               format('truetype'),
+             url('http://www.hcbravo.org/dscert-mldm/fonts/icon.svg')
+               format('svg');
+        font-weight: normal;
+        font-style: normal;
+      }
+    </style>
+
+    <link rel="stylesheet" href="http://www.hcbravo.org/dscert-mldm/stylesheets/application.css">
+    <link rel="stylesheet" href="http://www.hcbravo.org/dscert-mldm/stylesheets/temporary.css">
+    <link rel="stylesheet" href="http://www.hcbravo.org/dscert-mldm/stylesheets/palettes.css">
+    <link rel="stylesheet" href="http://www.hcbravo.org/dscert-mldm/stylesheets/highlight/highlight.css">
+
+    
+    
+    
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,700|Roboto&#43;Mono">
+    <style>
+      body, input {
+        font-family: 'Roboto', Helvetica, Arial, sans-serif;
+      }
+      pre, code {
+        font-family: 'Roboto Mono', 'Courier New', 'Courier', monospace;
+      }
+    </style>
+
+    
+    <script src="http://www.hcbravo.org/dscert-mldm/javascripts/modernizr.js"></script>
+
+    
+
+  </head>
+  <body class="palette-primary-red palette-accent-blue">
+
+
+
+	
+	
+
+
+<div class="backdrop">
+	<div class="backdrop-paper"></div>
+</div>
+
+<input class="toggle" type="checkbox" id="toggle-drawer">
+<input class="toggle" type="checkbox" id="toggle-search">
+<label class="toggle-button overlay" for="toggle-drawer"></label>
+
+<header class="header">
+	<nav aria-label="Header">
+  <div class="bar default">
+    <div class="button button-menu" role="button" aria-label="Menu">
+      <label class="toggle-button icon icon-menu" for="toggle-drawer">
+        <span></span>
+      </label>
+    </div>
+    <div class="stretch">
+      <div class="title">
+        Project 3: Genome Assembly and String Alignment
+      </div>
+    </div>
+
+    
+    <div class="button button-twitter" role="button" aria-label="Twitter">
+       <a href="https://twitter.com/hcorrada" title="@hcorrada on Twitter" target="_blank" class="toggle-button icon icon-twitter"></a>
+    </div>
+    
+
+    
+    <div class="button button-github" role="button" aria-label="GitHub">
+      <a href="https://github.com/hcorrada" title="@hcorrada on GitHub" target="_blank" class="toggle-button icon icon-github"></a>
+    </div>
+    
+    
+        
+  </div>
+  <div class="bar search">
+    <div class="button button-close" role="button" aria-label="Close">
+      <label class="toggle-button icon icon-back" for="toggle-search"></label>
+    </div>
+    <div class="stretch">
+      <div class="field">
+        <input class="query" type="text" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck>
+      </div>
+    </div>
+    <div class="button button-reset" role="button" aria-label="Search">
+      <button class="toggle-button icon icon-close" id="reset-search"></button>
+    </div>
+  </div>
+</nav>
+
+</header>
+
+<main class="main">
+	<div class="drawer">
+		<nav aria-label="Navigation">
+  <a href="http://www.hcbravo.org/dscert-mldm" class="project">
+    <div class="banner">
+      
+        <div class="logo">
+          <img src="http://www.hcbravo.org/dscert-mldmimages/logo.png">
+        </div>
+      
+      <div class="name">
+        <strong>CMSC643: Machine Learning and Data Mining </strong>
+        
+          <br>
+          hcorrada/dscert-mldm.git
+        
+      </div>
+    </div>
+  </a>
+
+  <div class="scrollable">
+    <div class="wrapper">
+      
+        <hr>
+      
+
+      <div class="toc">
+        
+        <ul>
+          
+
+
+
+
+<li>
+  
+    
+
+
+
+<a  title="Calendar" href="http://www.hcbravo.org/dscert-mldm/calendar/">
+	
+	Calendar
+</a>
+
+
+
+  
+</li>
+
+
+
+<li>
+  
+    
+
+
+
+<a  title="Logistics" href="http://www.hcbravo.org/dscert-mldm/logistics/">
+	
+	Logistics
+</a>
+
+
+
+  
+</li>
+
+
+
+<li>
+  
+    
+
+
+
+<a  title="Resources" href="http://www.hcbravo.org/dscert-mldm/resources/">
+	
+	Resources
+</a>
+
+
+
+  
+</li>
+
+
+
+<li>
+  
+    
+
+
+
+<a  title="Projects" href="http://www.hcbravo.org/dscert-mldm/projects/">
+	
+	Projects
+</a>
+
+
+
+  
+</li>
+
+
+        </ul>
+        
+
+        
+        <hr>
+        <span class="section">The author</span>
+        
+        <ul>
+          
+          <li>
+            <a href="https://twitter.com/hcorrada" target="_blank" title="@hcorrada on Twitter">
+              @hcorrada on Twitter
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://github.com/hcorrada" target="_blank" title="@hcorrada on GitHub">
+              @hcorrada on GitHub
+            </a>
+          </li>
+          
+        </ul>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+	</div>
+
+	<article class="article">
+		<div class="wrapper">
+			<h1>Project 3: Genome Assembly and String Alignment </h1>
+
+			
+
+<p><strong>Due: Tuesday April 18</strong><br />
+<strong>Posted: April 4, 2017</strong><br />
+<strong>Last Update: April 16, 2017</strong></p>
+
+<h2 id="programming-questions">Programming Questions</h2>
+
+<p>Submit your answers to Problems 6 and 7 in the
+<a href="http://rosalind.info/classes/401/">Rosalind final submission page</a>.</p>
+
+<h3 id="code-grading-60-pts">Code Grading (60 pts)</h3>
+
+<p>Same guidelines as <a href="projects/projects_1/">Project 1</a>.</p>
+
+<h2 id="assembly">Assembly</h2>
+
+<p>For this exercise you will use your code for string reconstruction using DeBruijn graphs to analyze genomes from the Ebola virus. Download data for this exercise at this URL:</p>
+
+<p><a href="http://cbcb.umd.edu/~hcorrada/CMSC423/downloads/hw3data.zip">http://cbcb.umd.edu/~hcorrada/CMSC423/downloads/hw3data.zip</a></p>
+
+<p>Unzip this file in your working directory, you should see the following four files:</p>
+
+<ul>
+<li><code>ebola.fa</code>: This FASTA file contains assembled genomes from twenty different patients sampled during the 2014 ebola outbreak. These are a subset of the genomes analyzed as part of the sequencing effort described in this Science paper: <a href="http://www.sciencemag.org/content/345/6202/1369.full">http://www.sciencemag.org/content/345/6202/1369.full</a>. This effort was chronicled in this New Yorker piece: <a href="http://www.newyorker.com/magazine/2014/10/27/ebola-wars">http://www.newyorker.com/magazine/2014/10/27/ebola-wars</a>. All data related to this effort can be obtained from the NCBI <a href="http://www.ncbi.nlm.nih.gov/bioproject/257197">http://www.ncbi.nlm.nih.gov/bioproject/257197</a>.</li>
+<li><code>mystery_paired_200.txt</code>: Simulated paired-end reads with \(d=200\) from the same genome. This file containing paired-end reads uses the format in Rosalind:</li>
+</ul>
+
+<p><code>...AGACATCCGAACCATAGAGGATTC|CTCTATGTGCTGTGATG...</code></p>
+
+<p><strong>Question 1</strong> (15pts) Assemble the ebola genome from the given reads and see if it matches any of the twenty genomes in the <code>ebola.fa</code> file. Write down the sequence name from the <code>ebola.fa</code> file that matches you assembled genome (it starts with &lsquo;KM&rsquo;)</p>
+
+<p><strong>Question 2</strong> (10 pts) How hard is it to assemble this genome from these simulated 101 bp paired-end reads? Provide the  distribution of in-degrees and out-degrees in the DeBruijn graph for this set of reads.</p>
+
+<p><strong>Question 3</strong> (5 pts) Generate all 101-mers from this genome using your &lsquo;String Composition&rsquo; (Problem 21 in the pre-lecture exercises). How repetitive is this genome when using 101 bp reads?</p>
+
+<p><strong>Question 4</strong> (10 pts) What is the largest \(k\) for which the \(k\)-mer composition of this genome contains at least 1 repeat.</p>
+
+<h2 id="how-to-submit">How to submit</h2>
+
+<p>Writeup answers to the four questions above. Submit to ELMS along with <em>all</em> code you used to answer these questions.</p>
+
+
+			<aside class="copyright" role="note">
+				
+				&copy; 2017 Released under the MIT license &ndash;
+				
+				Documentation built with
+				<a href="https://www.gohugo.io" target="_blank">Hugo</a>
+				using the
+				<a href="http://github.com/digitalcraftsman/hugo-material-docs" target="_blank">Material</a> theme.
+			</aside>
+
+			<footer class="footer">
+				
+
+<nav class="pagination" aria-label="Footer">
+  <div class="previous">
+  
+      <a href="http://www.hcbravo.org/dscert-mldm/projects/project_1/" title="Project 1: Finding origin of DNA replication in a bacterial genome">
+        <span class="direction">
+          Previous
+        </span>
+        <div class="page">
+          <div class="button button-previous" role="button" aria-label="Previous">
+            <i class="icon icon-back"></i>
+          </div>
+          <div class="stretch">
+            <div class="title">
+              Project 1: Finding origin of DNA replication in a bacterial genome
+            </div>
+          </div>
+        </div>
+      </a>
+  
+  </div>
+
+  <div class="next">
+  
+      <a href="http://www.hcbravo.org/dscert-mldm/resources/howto-biopython/" title="CMSC Resources">
+        <span class="direction">
+          Next
+        </span>
+        <div class="page">
+          <div class="stretch">
+            <div class="title">
+              CMSC Resources
+            </div>
+          </div>
+          <div class="button button-next" role="button" aria-label="Next">
+            <i class="icon icon-forward"></i>
+          </div>
+        </div>
+      </a>
+  
+  </div>
+</nav>
+
+
+
+
+
+			</footer>
+		</div>
+	</article>
+
+	<div class="results" role="status" aria-live="polite">
+		<div class="scrollable">
+			<div class="wrapper">
+				<div class="meta"></div>
+				<div class="list"></div>
+			</div>
+		</div>
+	</div>
+</main>
+
+    <script>
+    
+      var base_url = 'http:\/\/www.hcbravo.org\/dscert-mldm';
+      var repo_id  = 'hcorrada\/dscert-mldm.git';
+    
+    </script>
+
+    <script src="http://www.hcbravo.org/dscert-mldm/javascripts/application.js"></script>
+    
+
+    <script>
+      /* Add headers to scrollspy */
+      var headers   = document.getElementsByTagName("h2");
+      var scrollspy = document.getElementById('scrollspy');
+
+      if(scrollspy) {
+        if(headers.length > 0) {
+          for(var i = 0; i < headers.length; i++) {
+            var li = document.createElement("li");
+            li.setAttribute("class", "anchor");
+
+            var a  = document.createElement("a");
+            a.setAttribute("href", "#" + headers[i].id);
+            a.setAttribute("title", headers[i].innerHTML);
+            a.innerHTML = headers[i].innerHTML;
+
+            li.appendChild(a)
+            scrollspy.appendChild(li);
+          }
+        } else {
+          scrollspy.parentElement.removeChild(scrollspy)
+        }
+
+
+        /* Add permanent link next to the headers */
+        var headers = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
+
+        for(var i = 0; i < headers.length; i++) {
+            var a = document.createElement("a");
+            a.setAttribute("class", "headerlink");
+            a.setAttribute("href", "#" + headers[i].id);
+            a.setAttribute("title", "Permanent link")
+            a.innerHTML = "#";
+            headers[i].appendChild(a);
+        }
+      }
+    </script>
+
+    
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  </body>
+</html>
+
