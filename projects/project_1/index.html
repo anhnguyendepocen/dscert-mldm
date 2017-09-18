@@ -334,7 +334,7 @@ a minhash and LSH system can identify these instances.</p>
 <pre><code class="language-python">def shard_document(string, k):
   # initialize set data structure
   # for each position in string, extract substring of length k
-  # hash into 32-bit integer
+  # hash into 32-bit integer using crc32
   # insert into set
 </code></pre>
 
@@ -345,9 +345,8 @@ a minhash and LSH system can identify these instances.</p>
 <p>Function should have skeleton</p>
 
 <pre><code class="language-python">def jaccard(a, b):
-  # initialize variables with size of union and intersections to 0
-  # scan both sets in sorted order
-  # update union and intersection sizes as appropriate
+  # compute union size
+  # compute intersection size
   # return ratio of union and intersection
 </code></pre>
 
@@ -373,6 +372,43 @@ a minhash and LSH system can identify these instances.</p>
 <h1 id="part-iii-locality-sensitive-hashing">Part III: Locality-Sensitive Hashing</h1>
 
 <p>COMING SOON</p>
+
+<h1 id="helpers">Helpers</h1>
+
+<h2 id="obtaining-data">Obtaining data</h2>
+
+<p>You can use the following python code to download data for the project</p>
+
+<pre><code class="language-python">import os
+from six.moves import urllib
+
+DOWNLOAD_ROOT = &quot;https://raw.githubusercontent.com/chrisjmccormick/MinHash/master/data&quot;
+PLAGIARISM_PATH = &quot;datasets/plagiarism&quot;
+DATA_SIZES = [100,1000,2500,10000]
+
+def fetch_data(download_root=DOWNLOAD_ROOT, 
+               plagiarism_path=PLAGIARISM_PATH, 
+               data_sizes=DATA_SIZES,
+               maxsize=1000):
+  if not os.path.isdir(plagiarism_path):
+      os.makedirs(plagiarism_path)
+  for size in data_sizes:
+      if size &lt;= maxsize:
+          train_file = &quot;articles_&quot; + str(size) + &quot;.train&quot; 
+          train_path = plagiarism_path + '/' + train_file
+          if not os.path.exists(train_path):
+              train_url = download_root + '/' + train_file
+              urllib.request.urlretrieve(train_url, train_path)
+          
+          truth_file = &quot;articles_&quot; + str(size) + &quot;.truth&quot;
+          truth_path = plagiarism_path + '/' + truth_file
+          if not os.path.exists(truth_path):
+              truth_url = download_root + &quot;/&quot; + truth_file
+              urllib.request.urlretrieve(truth_url, truth_path)
+</code></pre>
+
+<p>Using the function <code>fetch_data</code> will download data to a subdirectory pointed to by the variable <code>PLAGIARISM_PATH</code>. You can assign
+the path you want to use for your data to taht variable. The <code>maxsize</code> argument of the <code>fetch_data</code> function is used to limit the size of data downloaded. For testing and development you should use the 1000 document dataset. You can get that with function call <code>fetch_data(maxsize=1000)</code>.</p>
 
 
 			<aside class="copyright" role="note">
