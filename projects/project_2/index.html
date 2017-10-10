@@ -9,7 +9,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=10" />
-    <title>Project 2: Gibbs Sampling, EM and evolution - CMSC643: Machine Learning and Data Mining</title>
+    <title>Project 2: Classification with Health Records - CMSC643: Machine Learning and Data Mining</title>
     <meta name="generator" content="Hugo 0.24" />
 
     
@@ -97,7 +97,7 @@
     </div>
     <div class="stretch">
       <div class="title">
-        Project 2: Gibbs Sampling, EM and evolution
+        Project 2: Classification with Health Records
       </div>
     </div>
 
@@ -271,196 +271,54 @@
 
 	<article class="article">
 		<div class="wrapper">
-			<h1>Project 2: Gibbs Sampling, EM and evolution </h1>
+			<h1>Project 2: Classification with Health Records </h1>
 
 			
 
-<p><strong>Due Monday March 6</strong></p>
+<p><strong>Due October 30</strong></p>
 
-<p>Posted: 2/23/2017<br />
-Last Update: 2/23/2017</p>
+<p>Posted: 10/10/2017<br />
+Last Update: 10/10/2017</p>
 
-<h2 id="programming-questions">Programming Questions</h2>
+<h1 id="task">Task</h1>
 
-<p>Submit your answers to Problems 4 and 5 in the
-<a href="http://rosalind.info/classes/401/">Rosalind final submission page</a>.</p>
+<p>We will use data from the following Kaggle dataset: <a href="https://www.kaggle.com/joniarroba/noshowappointments">https://www.kaggle.com/joniarroba/noshowappointments</a>.</p>
 
-<p><strong>Question 1. (5 pts)</strong> Write three or four sentences as a postmortem on the implementation of the two algorithms. What was the biggest challenge in
-  implementing and testing these algorithms?</p>
+<p>The goal here is to predict patients that will not show up for medical appointments based on their medical records. You should read
+the dataset and task prediction in Kaggle to familiarize yourself as much as possible with the task and data.</p>
 
-<p><strong>Note</strong>: <em>Postmortem</em> refers to short reviews usually done after
-completion of a project to set down lessons learned through the
-project. Implementation methods and ideas that worked, and those that did
-not. More info: <a href="http://blog.codinghorror.com/the-project-postmortem/">here</a>
-and <a href="http://www.uio.no/studier/emner/matnat/ifi/INF9181/h11/undervisningsmateriale/reading-materials/Lecture-10/post-mortems.pdf">here</a>.</p>
-
-<h3 id="code-grading-60-pts">Code Grading (60 pts)</h3>
-
-<p>Same guidelines as <a href="http://www.hcbravo.org/dscert-mldm/
-/projects/project_1">Project 1</a>.</p>
-
-<h2 id="entropy">Entropy</h2>
-
-<p>Consider length \(k\) profiles estimated from a set of
-\(t\) \(k\)-mers using pseudo-counts.</p>
-
-<p><strong>Question 2. (5 pts)</strong> What is the <em>minimum</em> entropy score one of these profiles
-can achieve? Provide an example set of \(t=7\) \(4\)-mers that would
-produce a profile with minimum entropy.</p>
-
-<p><strong>Question 3. (5 pts)</strong> What is the <em>maximum</em> entropy score one of these profiles can achieve? Provide an example set of \(t=7\) \(4\)-mers that would produce a profile with maximum entropy.</p>
-
-<h2 id="entropy-game">Entropy Game</h2>
-
-<p>I mentioned in class that the reason we would use (low) entropy and
-self-similarity as a score in motif finding is that evolution would
-produce low entropy profiles for DNA binding proteins that
-perform important biological processess (e.g., TFs that regulate
-circadian genes). In this exercise you will conduct a simulation study to explore this
-idea.</p>
-
-<p>Suppose we have a brand new fictional universe with the first ever
-living thing: a single cell, single gene organism that the only thing it does,
-besides reproducing itself, is produce a DNA binding protein (HcbP) that induces expression of itself, and
-that&rsquo;s how it keeps itself alive (it&rsquo;s a stretch I know). Suppose that
-the following 12-mer is the sequence of DNA where the protein binds:
-<code>TCGTACGGTATT</code>.</p>
-
-<p>Now let&rsquo;s play the following evolution game:</p>
-
-<ol>
-<li><p>Evolution for this organism works as follows:<br />
-a. every year each individual in the population reproduces five times (see how reproduction works in step 2) to produce five offspring.<br />
-b. each individual only survives for 10 years, and<br />
-c. at the end of the year at most 100 of the individuals that made it to the end of the year are randomly selected to continue living on to the next year.</p></li>
-
-<li><p>Reproduction: we represent an individual strictly by the 12-mer in
-the HcbP binding site. When an individual reproduces each position of the offspring&rsquo;s 12-mer is randomly mutated with probability <sup>1</sup>&frasl;<sub>15</sub> to a different nucleotide.</p></li>
-
-<li><p>Survival: remember that binding of HcbP is essential for survival
-of this organism. Turns out that HcbP can bind to sequences that
-satisfy the following: <code>T[C|G]GTNNNNT[A|G]NT</code>, this representation
-means: in position 2 either <code>C</code> or <code>G</code> allows binding, in positions
-with <code>N</code> any base allows binding. You can think of this as a <code>regular
-expression</code>  and a match allows binding. However, no match means
-the individual does not survive. (See below for more on regular expressions).</p></li>
-</ol>
-
-<p>Ok, now code two versions of this game:<br />
-  (1) a version where step 3 (survival) is implemented, and<br />
-  (2) a version where step 3 is not implemented.</p>
-
-<p>I.e., in version 1, if an individual&rsquo;s 12-mer does not
-match the above regular expression it dies, in version 2 it
-survives. Remember that at most 100 individuals are retained at the
-end of the year.</p>
-
-<p>Run each version of your game 10 times for 100 years each time and
-calculate the entropy of the profile corresponding to the surviving population. The outer loop will look something like this:</p>
-
-<pre><code class="language-python">nruns = 10
-nyears = 100
-num_offspring = 5
-mutation_rate = 1. / 15
-max_age = 10
-max_population_size = 100
-
-entropies = []
-for i in xrange(nruns):
-	# age and sequence of primodial organism
-	population = [(0, 'TCGTACGGTATT')]
-	for j in xrange(nyears):
-		# five new individuals per
-		# individual in the population, with random mutations at each
-		# position with given probability
-		population = reproduce(population, num_offspring, mutation_rate)
-
-	    # remove members of the population with non-binding sequence
-		# (only in version 1 of the game)
-		population = remove_nonbinding(population)
-
-	    # remove members of the population that are too old (10 years old)
-		population = remove_elders(population, max_age)
-
-        # increase the age of each individual and keep at most 100
-        #  individuals, choose randomly if populations is larger that 100
-		population = yearend(population, max_population_size)
-	entropies.append(calculate_entropy(population))
-</code></pre>
-
-<p><strong>Question 4 (15 pts)</strong>. Are the entropies generated by two versions of the
-game different? Are the entropies more or less similar the longer you run the simulation (<code>nyears</code>).
-Make a plot or table that shows how entropies differ.</p>
-
-<p><strong>Question 5. (10 pts)</strong> How does the matching regular expression for the
-binding site affect the
-difference in resulting entropies? For instance, you can change the number of positions where matching
-doesn&rsquo;t matter, or change the choice of nucleotides that allow binding.</p>
-
-<p>(a) Suggest a change to the binding regular expression and a
-hypothesis of how the entropies for the two versions of the game will
-vary after you change the matching expression.</p>
-
-<p>(b) Now, run your experiment again using your new matching rule and calculate
-entropies again. Do these results agree with your hypothesis?</p>
-
-<h2 id="notes">Notes</h2>
-
-<p>The goal of this exercise is for you to understand the concept of
-entropy and how it may be a reasonable measure to use when thinking
-about the evolution of DNA sequences. So, here are some hints on how
-to implement this:</p>
+<h1 id="part-i-data-prep">Part I: Data prep</h1>
 
 <ul>
-<li><p>To check if a mutation should be inserted in a given position in an
-offspring string you can use <code>if random.random() &lt;= mutation.rate</code></p></li>
-
-<li><p>The <code>filter</code> function is very useful to modify lists according to
-some predicate. For example, to remove individuals from the
-population based on age (using the tuple representation above) you
-can use <code>population=filter(lambda x: x[0] &lt;= max_age, population)</code></p></li>
-
-<li><p>To check for binding it&rsquo;s easiest to use the regular expression
-library in python. The binding expression above can be used as
-follows:</p></li>
+<li>Fork my project skeleton github repo on github</li>
+<li>Download the dataset from <a href="http://www.hcbravo.org/dscert-mldm/
+data/noshowappointments.zip">http://www.hcbravo.org/dscert-mldm/
+data/noshowappointments.zip</a>. Unzip and copy the csv file on to the <code>data</code> directory in the project.</li>
+<li>Rename file <code>partI_shell.ipynb</code> to <code>partI.ipynb</code></li>
+<li>Complete the <code>partI.ipynb</code> notebook</li>
 </ul>
 
-<pre><code class="language-python">import re
-
-# the rule for pattern T[C|G]GTNNNNT[A|G]NT
-# match C or G in the second position
-# match A,C,G or T in positions 5-8 ([ACGT]) is the set of characters
-# that match {4} is the exact number of matches
-# match A or G in position 10
-# match A,C,G or T in position 11
-matchRE = re.compile(&quot;T[CG]GT[ACGT]{4}T[AG][ACGT]T&quot;)
-
-# this code checks if string 'kmer' binds according to the rule
-matchRE.match(kmer) is not None
-</code></pre>
+<p>This includes:</p>
 
 <ul>
-<li>To randomly select 100 items from a list you can use</li>
+<li>Reading in data csv file</li>
+<li>Cleanup data column names</li>
+<li>Remove records with erroneous entries (e.g., negative ages, look at what people have done in Kaggle)</li>
+<li>Create a test set of 100k records that you won&rsquo;t touch again for the reminder of this project until Part III. Use stratified sampling on the <code>No-show</code> variable to ensure
+test set and training set class proportions are the same. Save the train and test sets as csv files in the <code>processed_data</code> directory.</li>
+<li>Plot the <code>No-show</code> variable against the other variables in the dataset as part of Exploratory Data Analysis (USE THE TRAINING SET FOR THIS!!)</li>
+<li>Create a preprocessing pipeline using <code>scikit</code> to prepare the data for the ML algorithms we will use. At a minimum, standardize numerical variables, transform categorical variables into one or more numerical values. You may apply other transformations that you think would be useful (e.g., logarithmic transformations).</li>
 </ul>
 
-<pre><code class="language-python"># this shuffles in place
-random.shuffle(population)
-population = population[:100]
-</code></pre>
+<p>Push your changes to github and submit part I on ELMS on Monday Oct. 16 11:59pm</p>
 
-<ul>
-<li><p>Remember that we define \(0 \cdot \log_2(0) = 0\). You can use code
-like this to enforce this: <code>numpy.log2(p) if p &gt; 0 else 0</code></p></li>
+<p>A lot of what you will do here is covered in the introduction notebook posted earlier this semester <a href="http://www.hcbravo.org/dscert-mldm/
+/notebooks/intro_lab.html">http://www.hcbravo.org/dscert-mldm/
+/notebooks/intro_lab.html</a>. Feel free to use that code for inspiration.</p>
 
-<li><p>Finally, you need to think about how to summarize the entropies you
-calculate from the 10 runs you perform. The <code>numpy</code> library can be
-helpful here, e.g., <code>numpy.mean</code>.</p></li>
-</ul>
+<h1 id="part-ii-classification-methods">Part II: Classification Methods</h1>
 
-<h2 id="how-to-submit">How to submit</h2>
-
-<p>Submit your answers to the five questions above in writing as a pdf to ELMS. Submit along with your entropy game code.
-Again, using a <code>jupyter</code> notebook is encouraged.</p>
+<h1 id="part-iii-ensembles-and-final-result">Part III: Ensembles and Final Result</h1>
 
 
 			<aside class="copyright" role="note">
